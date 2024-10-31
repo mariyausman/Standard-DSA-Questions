@@ -5,7 +5,7 @@ A Minimum Spanning Tree (MST) is a subset of edges of a connected, weighted, und
 Prim’s Algorithm is a greedy algorithm that finds an MST for a weighted, undirected graph. It starts with a single node and adds edges to form the MST by choosing the minimum weight edge that connects a vertex in the MST to a vertex outside the MST. The process continues until all vertices are included in the MST.
 
 3. Data Structures Involved
-In the code provided in your images, the following data structures are used:
+Data structures are used:
 
 Vector key[]: Stores the minimum weight edge connecting each vertex to the MST.
 Vector mst[]: A boolean array to track which vertices are included in the MST.
@@ -25,7 +25,7 @@ class Solution {
 public:
     int getMinValueNode(vector<int>& key, vector<bool>& mst) {
         int temp = INT_MAX;    // Initialize with maximum integer value
-        int index = -1;         // To store the actual node having min value
+        int index = -1;         // To store the actual node having min value, and mst ==false means that node is still not added in mst
         for (int i = 0; i < key.size(); ++i) {
             if (key[i] < temp && mst[i] == false) {
                 temp = key[i];
