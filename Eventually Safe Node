@@ -1,0 +1,46 @@
+/* https://leetcode.com/problems/find-eventual-safe-states/description/ */
+/* This question depends on cycle detection in Directed graph
+It says that any node taht enetrs into cycle , would never be a safe node .And any node from where we start returning(unwinding recursive call stack) , is terminal node.
+*/
+//CODE//
+class Solution {
+public:
+ bool checkCyclicDirectedGraphUsingDfs(vector<vector<int>>& graph, int src, unordered_map<int, bool>& visited, unordered_map<int, bool>& dfsVisited,   vector<int>& safeNodes) {
+        visited[src] = true;
+        dfsVisited[src] = true;
+
+        for (auto nbr : graph[src]) {
+            if (!visited[nbr]) {
+                bool cycleDetected = checkCyclicDirectedGraphUsingDfs(graph, nbr, visited, dfsVisited, safeNodes);
+                if (cycleDetected) return true;
+            } else if (dfsVisited[nbr]) {
+                // Cycle found
+                return true;
+            }
+        }
+
+        // Mark src as safe after DFS completion
+        dfsVisited[src] = false;
+        safeNodes[src] = 1;
+        return false;
+    }
+    vector<int> eventualSafeNodes(vector<vector<int>>& graph) {
+        vector<int> ans;
+        unordered_map<int, bool> visited, dfsVisited;
+        int V = graph.size();
+        vector<int>safeNodes(V,0);
+
+        // Check each node for cycles
+        for (int i = 0; i < V; ++i) {
+            if (!visited[i])
+                checkCyclicDirectedGraphUsingDfs(graph, i, visited, dfsVisited, safeNodes);
+        }
+
+        // Collect safe nodes
+        for (int i = 0; i < V; ++i) {
+            if (safeNodes[i] == 1) ans.push_back(i);
+        }
+
+        return ans;
+    }
+};
