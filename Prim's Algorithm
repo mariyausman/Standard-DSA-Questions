@@ -12,6 +12,7 @@ Vector mst[]: A boolean array to track which vertices are included in the MST.
 Vector parent[]: Stores the parent of each vertex in the MST.
 Adjacency List adj[][]: Represents the graph, where each vertex has a list of edges connected to it.*/
 
+
 // Code//
 
 #include <iostream>
