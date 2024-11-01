@@ -1,0 +1,57 @@
+/* https://www.geeksforgeeks.org/problems/minimum-multiplications-to-reach-end/1 */
+
+// Thsi code is the perfect expample to implement BFS
+// We initiate with start number, the multiply with all the numbers of array given , wherever(level) we first find the end number, we stop there, that is the minimum step to raech end
+
+//CODE//
+
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <utility>
+
+using namespace std;
+
+class Solution {
+public:
+    int minimumMultiplications(vector<int>& arr, int start, int end) {
+        // Edge case: if start is the same as end, no multiplications are needed
+        if (start == end) return 0;
+
+        // The code implements BFS
+        queue<pair<int, int>> q; // int-> number generated and int-> level (steps to reach it)
+        vector<bool> visited(100000, false); // To avoid reprocessing the same number
+
+        // Start the BFS from the initial number with level 0
+        q.push({start, 0});
+        visited[start] = true;
+
+        while (!q.empty()) {
+            pair<int, int> front = q.front();
+            q.pop();
+
+            int currentNumber = front.first;
+            int currentLevel = front.second;
+
+            // Check each multiplication possibility
+            for (int i = 0; i < arr.size(); i++) {
+                int newNumber = (currentNumber * arr[i]) % 100000;
+
+                // If we reach the end, return the level + 1 (one more multiplication)
+                if (newNumber == end) {
+                    return currentLevel + 1;
+                }
+
+                // Push the new number to the queue if not already visited
+                if (!visited[newNumber]) {
+                    visited[newNumber] = true;
+                    q.push({newNumber, currentLevel + 1});
+                }
+            }
+        }
+
+        // If we exhaust all possibilities and don't reach end, return -1
+        return -1;
+    }
+};
+
