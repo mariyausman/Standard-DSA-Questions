@@ -1,0 +1,87 @@
+
+//Kruskal's Algorithm -> to find Minimum Spanning Tree
+/* This algorithm focuses on UNION OF DISJOINT COMPONENTS( if two nodes have diffrent parents, then merge them) AND 
+PATH COMPRESSION( is any node is recursively child of another node , the it can be made a direct child).
+Other term we use here is RANK( a node-A with greater child , has greater rank , so if any node-B becomes the part of that component , then earlier node-A will reprpesent it).
+We will use a LINER DATASTRUCTURE , rather than adjacency list, which stores( edge and weight), sort it by weights. And there is PARENT array which stores Parent by apth compression.
+
+RULE 1 : if two nodes have diffrent parents, then merge them, else ignore.
+RULE 2 : when you merge, make the higher rank node as parent and increment it's rank again. If same ranks occur, make any of them as parent.
+
+Explanation
+mycmp Function: A comparator function to sort edges based on their weights for Kruskal's algorithm.
+findParent Function: Uses path compression to find the representative parent of a node.
+unionSet Function: Merges two sets based on rank, using union by rank optimization.
+spanningTree Function: Implements Kruskal's algorithm to find the MST by sorting edges and connecting components using union-find.
+
+*/
+//CODE//
+
+class Solution {
+public:
+    bool mycmp(vector<int> a, vector<int> b) {
+        return a[2] < b[2];
+    }
+
+    int findParent(vector<int>& parent, int node) {
+        if (parent[node] == node) {
+            return node;
+        }
+        return parent[node] = findParent(parent, parent[node]);
+    }
+
+    void unionSet(int u, int v, vector<int>& parent, vector<int>& rank) {
+        u = findParent(parent, u);
+        v = findParent(parent, v);
+
+        if (rank[u] < rank[v]) {
+            parent[u] = v;
+        } else if (rank[v] < rank[u]) {
+            parent[v] = u;
+        } else {
+            parent[v] = u;
+            rank[u]++;
+        }
+    }
+
+void getEdges(int V, vector<vector<int>> adj[], vector<vector<int>>& edges) {
+    for (int u = 0; u < V; ++u) {
+        for (auto edge : adj[u]) {
+            int v = edge[0];
+            int w = edge[1];
+            edges.push_back({u, v, w});
+        }
+    }
+}
+
+    int spanningTree(int V, vector<vector<int>> adj[]) {
+        vector<int> parent(V);
+        vector<int> rank(V, 0);
+
+        for (int i = 0; i < V; i++) {
+            parent[i] = i;
+        }
+
+        vector<vector<int>> edges;
+        getEdges(V, adj, edges); 
+
+        sort(edges.begin(), edges.end(), mycmp);
+
+        int ans = 0;
+        for (auto edge : edges) {
+            int u = edge[0];
+            int v = edge[1];
+            int w = edge[2];
+
+            u = findParent(parent, u);
+            v = findParent(parent, v);
+
+            if (u != v) {
+                unionSet(u, v, parent, rank);
+                ans += w;// because we have to return the weight of miiminum spanning tree
+            }
+        }
+
+        return ans;
+    }
+};
