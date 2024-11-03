@@ -1,0 +1,28 @@
+/* We will be given two nodes (p,q), and we have to find the first node which recursively attaches them (ancestor)
+Algorithm followed : 
+1. Find p and q.
+2. If you found p or q return them, else return NULL.
+3. At a point, where you will find that answers from left and right recursive call is not NULL , that is the ancestor, so return root */
+
+Tree *LowestCommonAncestor(root,p,q){
+if(root==NULL)
+return NULL;
+
+if(root->val == p)
+return root;
+
+if(root->val == q)
+return root;
+
+Tree *leftAns = LowestCommonAncestor(root->left, p,q);
+Tree *rightAns = LowestCommonAncestor(root->right, p,q);
+
+if(leftAns == NULL && rightAns == NULL)
+  return NULL;
+if(leftAns != NULL && rightAns == NULL)
+  return leftAns;
+if(leftAns == NULL && rightAns != NULL)
+  return rightAns;
+if(leftAns != NULL && rightAns != NULL)
+  return root;//found ancestor
+}
